@@ -14,6 +14,33 @@ import { fetchExaMCP } from "../backends/exa-mcp.js";
 /** Cap on a single web_read response body, in bytes, to bound memory use on heavy pages. */
 const READ_MAX_BYTES = 2 * 1024 * 1024; // 2 MB
 
+const CSS_SELECTOR_TAGS = new Set([
+	"html", "body", "main", "article", "section", "div", "span", "p", "a", "ul", "ol", "li",
+	"header", "footer", "nav", "aside", "form", "table", "thead", "tbody", "tr", "td", "th",
+	"h1", "h2", "h3", "h4", "h5", "h6", "img", "figure", "figcaption", "button", "input",
+]);
+
+function looksLikeCssSelector(value: string): boolean {
+	const selector = value.trim();
+	if (!selector) return false;
+
+	// Avoid passing natural-language questions or instructions to Jina's CSS parser.
+	if (/[.!?]\s*$/.test(selector)) return false;
+	if (/\.(?![-_a-zA-Z0-9])/u.test(selector)) return false;
+	if (/#(?![-_a-zA-Z0-9])/u.test(selector)) return false;
+	if (/[>+~,]\s*$/.test(selector)) return false;
+
+	const sentenceWords = /\b(extract|find|get|summari[sz]e|what|which|why|how|price|product|specs?|details?|delivery|whether|content|information|question)\b/i;
+	if (/\s/.test(selector) && sentenceWords.test(selector)) return false;
+
+	const hasSelectorSyntax = /[#.:[\]=,'"()*|^$~>+,]/.test(selector);
+	if (hasSelectorSyntax) return true;
+
+	return selector
+		.split(/\s+/)
+		.every((part) => CSS_SELECTOR_TAGS.has(part.toLowerCase()));
+}
+
 export interface FetchParams {
 	fresh?: boolean;
 	keywords?: string[];
@@ -109,7 +136,10 @@ export async function fetchWithReader(
 				headers["x-respond-with"] = params.mode === "rush" ? "text" : "markdown";
 			}
 			if (params.objective) {
-				headers["x-target-selector"] = params.objective;
+				const objective = params.objective.trim();
+				if (looksLikeCssSelector(objective)) {
+					headers["x-target-selector"] = objective;
+				}
 			}
 
 			const response = await fetch(readerUrl.toString(), {

@@ -335,13 +335,13 @@ export default function (pi: ExtensionAPI) {
 		name: "web_read",
 		label: "Read Web Page",
 		description:
-			"Fetch a URL as markdown. Use objective for a concrete question, keywords for long pages, " +
-			"rush for speed, smart for better narrowing. Use reader param to switch between " +
-			"Jina (default, free) and Sofya (250+ site parsers, needs API key).",
+			"Fetch a URL as markdown. Use keywords for long pages, rush for speed, smart for better narrowing. " +
+			"Use objective only for a CSS selector such as main, article, #content, or .product-description. " +
+			"Use reader param to switch between Jina (default, free) and Sofya (250+ site parsers, needs API key).",
 		promptSnippet: "Read content from a web page (supports markdown extraction)",
 		promptGuidelines: [
 			"Use web_read when you need to read the content of a specific URL",
-			"Set objective for a concrete question when only part of the page matters",
+			"Use objective only for a valid CSS selector, not a natural-language question",
 			"Add keywords for long pages when you know the relevant terms",
 			"Choose rush for speed or smart for higher-quality narrowing",
 		],
@@ -367,7 +367,7 @@ export default function (pi: ExtensionAPI) {
 			objective: Type.Optional(
 				Type.String({
 					description:
-						"CSS selector for targeted extraction. Use when only part of the page matters. (Jina reader only.)",
+						"CSS selector for targeted extraction, for example main, article, #content, or .product-description. Not a natural-language question. (Jina reader only.)",
 				}),
 			),
 			reader: Type.Optional(

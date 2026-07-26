@@ -86,7 +86,7 @@ This tries Firecrawl first, falls back to Jina, then Sofya. Exa and Exa MCP are 
 The `web_read` tool supports these parameters:
 
 - **reader** — override the reader backend (`jina`, `sofya`, `firecrawl`, `exa`, `exa_mcp`)
-- **objective** — CSS selector to target specific content (Jina only)
+- **objective** — CSS selector to target specific content, for example `main`, `article`, `#content`, or `.product-description` (Jina only). Do not use natural-language questions here.
 - **keywords** — relevant terms to highlight on long pages
 - **mode** — `rush` for speed (innerText) or `smart` (markdown extraction)
 - **fresh** — bypass cache when freshness matters
