@@ -1,3 +1,8 @@
+# Unreleased
+
+## Added
+- **Configurable Jina-compatible Reader endpoint** - `web_read` now accepts the optional top-level `readerBaseUrl` setting in `search.json`. It defaults to `https://r.jina.ai` and can point to a self-hosted compatible Reader deployment.
+
 # Release v2.9.0
 
 ## 🚀 New Features

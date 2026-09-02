@@ -62,7 +62,7 @@ The `web_read` tool supports multiple **reader backends**:
 
 | Reader     | Free? | Needs Key? | Notes |
 |------------|-------|------------|-------|
-| **Jina**   | ✅    | Optional   | Default. Supports `objective`, `keywords`, `mode`, `fresh`. Free at r.jina.ai |
+| **Jina**   | ✅    | Optional   | Default. Supports `objective`, `keywords`, `mode`, `fresh`. Uses `https://r.jina.ai` by default and supports Jina-compatible self-hosted endpoints |
 | **Sofya**  | ❌    | Yes        | 250+ site-specific parsers for clean markdown |
 | **Firecrawl** | ✅ | No (keyless) | 1,000 free credits/month, no API key required |
 | **Exa**    | ❌    | Yes        | 1,000 req/month (shared with Exa search) |
@@ -86,6 +86,7 @@ This tries Firecrawl first, falls back to Jina, then Sofya. Exa and Exa MCP are 
 The `web_read` tool supports these parameters:
 
 - **reader** — override the reader backend (`jina`, `sofya`, `firecrawl`, `exa`, `exa_mcp`)
+- **readerBaseUrl** — base URL for the Jina-compatible `web_read` endpoint. Defaults to `https://r.jina.ai`; for example, `https://reader.example.com`
 - **objective** — CSS selector to target specific content, for example `main`, `article`, `#content`, or `.product-description` (Jina only). Do not use natural-language questions here.
 - **keywords** — relevant terms to highlight on long pages
 - **mode** — `rush` for speed (innerText) or `smart` (markdown extraction)
@@ -119,7 +120,7 @@ The `web_read` tool supports these parameters:
 >
 > † Marginalia Search uses `public` as a shared API key — no registration required, but subject to a shared rate limit.
 >
-> **Jina AI:** Search (`s.jina.ai`) requires a free API key from [jina.ai](https://jina.ai). Content extraction via `web_read` uses Jina Reader (`r.jina.ai`) which is **free and needs no API key**.
+> **Jina AI:** Search (`s.jina.ai`) requires a free API key from [jina.ai](https://jina.ai). Content extraction via `web_read` uses Jina Reader (`r.jina.ai`) by default, which is **free and needs no API key**. Set `readerBaseUrl` to use a self-hosted Jina-compatible Reader endpoint.
 >
 > **OpenAI Codex** uses Pi-managed authentication. Enable `openai-codex` in `search.json`, then run `/login` in Pi and select OpenAI Codex. No `apiKey` is required in `search.json`. You can optionally set `model` (default: `gpt-5.4-mini`).
 >
@@ -144,6 +145,7 @@ Configure backends globally (all projects) or per-project:
 {
   "defaultBackend": "auto",
   "reader": "jina",
+  "readerBaseUrl": "https://r.jina.ai",
   "readerFallback": ["firecrawl", "jina", "sofya"],
   "backends": {
     "duckduckgo": { "enabled": true },

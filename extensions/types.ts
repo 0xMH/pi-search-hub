@@ -43,6 +43,8 @@ export interface SearchConfig {
 	reader?: "jina" | "sofya" | "firecrawl" | "exa" | "exa_mcp";
 	/** Reader fallback order for web_read. When the primary reader fails (422, 5xx, timeout), try the next in this list. Default: ["jina", "sofya", "firecrawl", "exa", "exa_mcp"]. */
 	readerFallback?: string[];
+	/** Base URL for the Jina-compatible web_read endpoint. Defaults to https://r.jina.ai. */
+	readerBaseUrl?: string;
 	/** Show status line with enabled backends. Default: true. Set to false to hide. */
 	showStatus?: boolean;
 	/** Cache TTL in milliseconds. Default: 300000 (5 min). Set to 0 to disable. */

@@ -112,18 +112,23 @@ export async function fetchWithReader(
 			return { content: result.content, reader: "exa_mcp" };
 		}
 
-		default: {
-			// Jina Reader: free, supports keywords / mode / objective hints.
-			const readerUrl = new URL("https://r.jina.ai/" + url);
+		case "jina": {
+			// Jina-compatible Reader: free, supports keywords / mode / objective hints.
+			const defaultBaseUrl = "https://r.jina.ai";
+			const baseUrl = (config.readerBaseUrl ?? defaultBaseUrl).replace(/\/+$/, "");
+			const readerUrl = new URL(`${baseUrl}/${url}`);
 
 			const headers: Record<string, string> = {
 				"Accept": "text/plain",
 			};
 
-			// Optional Jina API key for higher rate limits (fallback to no-auth)
-			const jinaKey = resolveBackendKey("jina", config);
-			if (jinaKey) {
-				headers["Authorization"] = `Bearer ${jinaKey}`;
+			// Self-hosted Reader does not need the hosted Jina API key. Avoid
+			// sending it to custom endpoints while preserving hosted Jina auth.
+			if (baseUrl === defaultBaseUrl) {
+				const jinaKey = resolveBackendKey("jina", config);
+				if (jinaKey) {
+					headers["Authorization"] = `Bearer ${jinaKey}`;
+				}
 			}
 
 			if (params.fresh) {
