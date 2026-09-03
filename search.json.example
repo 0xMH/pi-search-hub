@@ -7,7 +7,11 @@
   "backends": {
     "duckduckgo": { "enabled": true },
     "sofya": { "enabled": true, "apiKey": "SOFYA_API_KEY", "searchDepth": "basic" },
-    "jina": { "enabled": true },
+    "jina": {
+      "enabled": true,
+      "searchBaseUrl": "https://jina-search.example.com",
+      "searchProvider": "bing"
+    },
     "marginalia": { "enabled": true },
     "serper": { "enabled": true, "apiKey": "SERPER_API_KEY" },
     "brave": { "enabled": true, "apiKey": "BRAVE_API_KEY" },

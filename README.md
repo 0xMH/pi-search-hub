@@ -120,7 +120,7 @@ The `web_read` tool supports these parameters:
 >
 > † Marginalia Search uses `public` as a shared API key — no registration required, but subject to a shared rate limit.
 >
-> **Jina AI:** Search (`s.jina.ai`) requires a free API key from [jina.ai](https://jina.ai). Content extraction via `web_read` uses Jina Reader (`r.jina.ai`) by default, which is **free and needs no API key**. Set `readerBaseUrl` to use a self-hosted Jina-compatible Reader endpoint.
+> **Jina AI:** Hosted search (`s.jina.ai`) requires a free API key from [jina.ai](https://jina.ai). Set `backends.jina.searchBaseUrl` to a self-hosted Jina-compatible Search endpoint, such as `https://jina-search.example.com`; custom endpoints default to `searchProvider: "bing"` and do not receive the hosted Jina API key. Content extraction via `web_read` uses Jina Reader (`r.jina.ai`) by default, which is **free and needs no API key**. Set `readerBaseUrl` to use a self-hosted Jina-compatible Reader endpoint.
 >
 > **OpenAI Codex** uses Pi-managed authentication. Enable `openai-codex` in `search.json`, then run `/login` in Pi and select OpenAI Codex. No `apiKey` is required in `search.json`. You can optionally set `model` (default: `gpt-5.4-mini`).
 >
@@ -150,7 +150,12 @@ Configure backends globally (all projects) or per-project:
   "backends": {
     "duckduckgo": { "enabled": true },
     "marginalia": { "enabled": true },
-    "jina": { "enabled": true, "apiKey": "JINA_API_KEY" },
+    "jina": {
+      "enabled": true,
+      "apiKey": "JINA_API_KEY",
+      "searchBaseUrl": "https://jina-search.example.com",
+      "searchProvider": "bing"
+    },
     "brave-llm": { "enabled": true, "apiKey": "BRAVE_API_KEY" },
     "serper": { "enabled": true, "apiKey": "SERPER_API_KEY" },
     "tavily": { "enabled": true, "apiKey": "TAVILY_API_KEY" },

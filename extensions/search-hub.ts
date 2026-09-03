@@ -3,7 +3,7 @@
  *
  * Backends (choose any, all disabled by default):
  *   duckduckgo    — ✅ Free, no key, via Python ddgs lib. Rate-limited.
- *   jina          — ✅ Free tier (API key optional for higher rate limits), full markdown via s.jina.ai
+ *   jina          — ✅ Hosted API or self-hosted Jina-compatible search endpoint
  *   marginalia    — ✅ Anti-SEO, "public" key optional. 354ms avg
  *   serper        — ✅ Google via serper.dev, 2500 free/mo. 667ms
  *   brave         — ✅ Brave Search, 2000 free/mo. 460ms
@@ -34,7 +34,8 @@
  *       "langsearch": { "enabled": true, "apiKey": "..." },
  *       "websearchapi": { "enabled": true, "apiKey": "..." },
  *       "perplexity": { "enabled": true, "apiKey": "..." },
- *       "searxng": { "enabled": true, "instanceUrl": "http://localhost:8888" }
+ *       "searxng": { "enabled": true, "instanceUrl": "http://localhost:8888" },
+ *       "jina": { "enabled": true, "searchBaseUrl": "https://jina-search.example.com", "searchProvider": "bing" }
  *     }
  *   }
  */

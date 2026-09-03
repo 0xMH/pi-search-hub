@@ -38,9 +38,16 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		needsInstanceUrl: false,
 		label: "Jina AI",
 		setupLabel: "Jina AI (free tier, optional key for higher rate limits)",
-		search: async (query, numResults, { key, signal }) => {
+		search: async (query, numResults, { key, signal, backendConfig }) => {
 			const { searchJina } = await import("./jina.js");
-			const result = await searchJina(query, numResults, key, signal);
+			const result = await searchJina(
+				query,
+				numResults,
+				key,
+				signal,
+				backendConfig?.searchBaseUrl,
+				backendConfig?.searchProvider,
+			);
 			return { results: result.results };
 		},
 	},

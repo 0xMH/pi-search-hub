@@ -13,6 +13,10 @@ export interface BackendConfig {
 	headers?: Record<string, string>;
 	/** SearXNG-specific: base URL of the self-hosted instance (e.g. http://localhost:8888) */
 	instanceUrl?: string;
+	/** Jina-specific: base URL of a Jina-compatible search endpoint. Defaults to https://s.jina.ai. */
+	searchBaseUrl?: string;
+	/** Jina self-hosted search provider. Defaults to bing for custom endpoints. */
+	searchProvider?: "google" | "bing" | "reader";
 	/** Perplexity-specific: model variant (sonar, sonar-pro, sonar-deep-research, sonar-reasoning). Default: sonar */
 	model?: string;
 	/** DuckDuckGo-specific: ddgs backend(s) — "auto", "duckduckgo", "bing", "brave", "google", comma-delimited */

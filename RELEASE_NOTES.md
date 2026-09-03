@@ -2,6 +2,7 @@
 
 ## Added
 - **Configurable Jina-compatible Reader endpoint** - `web_read` now accepts the optional top-level `readerBaseUrl` setting in `search.json`. It defaults to `https://r.jina.ai` and can point to a self-hosted compatible Reader deployment.
+- **Configurable Jina-compatible Search endpoint** - `web_search` now accepts `backends.jina.searchBaseUrl` and `searchProvider` for self-hosted Search deployments. Custom endpoints default to Bing and do not receive the hosted Jina API key.
 
 # Release v2.9.0
 
