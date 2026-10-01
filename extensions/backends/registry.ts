@@ -8,26 +8,6 @@ import { resolveBackendKey } from "../credentials.js";
 import { config } from "../config.js";
 import { recordBackendSuccess, recordBackendFailure } from "../scoring.js";
 
-import { searchDuckDuckGo } from "./duckduckgo.js";
-import { searchMarginalia } from "./marginalia.js";
-import { searchSerper } from "./serper.js";
-import { searchTavily } from "./tavily.js";
-import { searchExa } from "./exa.js";
-import { searchExaMCP } from "./exa-mcp.js";
-import { searchOpenAICodex } from "./openai-codex.js";
-import { searchBrave } from "./brave.js";
-import { searchLangSearch } from "./langsearch.js";
-import { searchFirecrawl } from "./firecrawl.js";
-import { searchWebSearchAPI } from "./websearchapi.js";
-import { searchPerplexity } from "./perplexity.js";
-import { searchSearXNG } from "./searxng.js";
-import { searchJina } from "./jina.js";
-import { searchBraveLLM } from "./brave-llm.js";
-import { searchLinkup } from "./linkup.js";
-import { searchYoucom } from "./youcom.js";
-import { searchFastcrw } from "./fastcrw.js";
-import { searchSofya } from "./sofya.js";
-
 // ---------------------------------------------------------------------------
 // Backend Registry
 // ---------------------------------------------------------------------------
@@ -41,6 +21,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "DuckDuckGo",
 		setupLabel: null,
 		search: async (query, numResults, { signal }) => {
+			const { searchDuckDuckGo } = await import("./duckduckgo.js");
 			const bc = (config.backends as Record<string, BackendConfig> | undefined)?.duckduckgo;
 			const ddg = await searchDuckDuckGo(query, numResults, signal, {
 				backend: bc?.ddgsBackend,
@@ -57,8 +38,16 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		needsInstanceUrl: false,
 		label: "Jina AI",
 		setupLabel: "Jina AI (free tier, optional key for higher rate limits)",
-		search: async (query, numResults, { key, signal }) => {
-			const result = await searchJina(query, numResults, key, signal);
+		search: async (query, numResults, { key, signal, backendConfig }) => {
+			const { searchJina } = await import("./jina.js");
+			const result = await searchJina(
+				query,
+				numResults,
+				key,
+				signal,
+				backendConfig?.searchBaseUrl,
+				backendConfig?.searchProvider,
+			);
 			return { results: result.results };
 		},
 	},
@@ -70,6 +59,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Marginalia",
 		setupLabel: "Marginalia (free, public key optional)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchMarginalia } = await import("./marginalia.js");
 			const result = await searchMarginalia(query, numResults, key, signal);
 			return { results: result.results };
 		},
@@ -82,6 +72,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Serper",
 		setupLabel: "Serper (Google, 2500 free/mo)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchSerper } = await import("./serper.js");
 			const result = await searchSerper(query, numResults, key!, signal);
 			return { results: result.results };
 		},
@@ -94,6 +85,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Tavily",
 		setupLabel: "Tavily (AI search, 1000 free/mo)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchTavily } = await import("./tavily.js");
 			const result = await searchTavily(query, numResults, key!, signal);
 			return { results: result.results };
 		},
@@ -106,6 +98,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Exa",
 		setupLabel: "Exa (AI-native, 1000 free/mo)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchExa } = await import("./exa.js");
 			const result = await searchExa(query, numResults, key!, signal);
 			return { results: result.results, warning: result.warning };
 		},
@@ -118,6 +111,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Exa MCP",
 		setupLabel: "Exa MCP (zero-config, no API key needed)",
 		search: async (query, numResults, { signal }) => {
+			const { searchExaMCP } = await import("./exa-mcp.js");
 			const result = await searchExaMCP(query, numResults, signal);
 			return { results: result.results };
 		},
@@ -130,6 +124,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "OpenAI Codex",
 		setupLabel: "OpenAI Codex (draws from subscription)",
 		search: async (query, numResults, { signal, backendConfig }) => {
+			const { searchOpenAICodex } = await import("./openai-codex.js");
 			const result = await searchOpenAICodex(query, numResults, signal, backendConfig);
 			return { results: result.results };
 		},
@@ -142,6 +137,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Brave",
 		setupLabel: "Brave (2000 free/mo)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchBrave } = await import("./brave.js");
 			const result = await searchBrave(query, numResults, key!, signal);
 			return { results: result.results };
 		},
@@ -154,6 +150,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "LangSearch",
 		setupLabel: "LangSearch (free, no CC)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchLangSearch } = await import("./langsearch.js");
 			const result = await searchLangSearch(query, numResults, key!, signal);
 			return { results: result.results };
 		},
@@ -166,6 +163,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Firecrawl",
 		setupLabel: "Firecrawl (keyless: 1000 free credits/mo, optional key for more)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchFirecrawl } = await import("./firecrawl.js");
 			const result = await searchFirecrawl(query, numResults, key, signal);
 			return { results: result.results };
 		},
@@ -178,6 +176,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "WebSearchAPI",
 		setupLabel: "WebSearchAPI (2000 free credits)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchWebSearchAPI } = await import("./websearchapi.js");
 			const result = await searchWebSearchAPI(query, numResults, key!, signal);
 			return { results: result.results };
 		},
@@ -190,6 +189,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Perplexity",
 		setupLabel: "Perplexity Sonar (unlimited free)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchPerplexity } = await import("./perplexity.js");
 			const model = (config.backends?.perplexity as BackendConfig | undefined)?.model;
 			const result = await searchPerplexity(query, numResults, key!, signal, model);
 			return { results: result.results };
@@ -203,6 +203,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "SearXNG",
 		setupLabel: "SearXNG (self-hosted metasearch)",
 		search: async (query, numResults, { key, instanceUrl, signal }) => {
+			const { searchSearXNG } = await import("./searxng.js");
 			const result = await searchSearXNG(query, numResults, key, instanceUrl, signal);
 			return { results: result.results };
 		},
@@ -215,6 +216,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Brave LLM",
 		setupLabel: "Brave LLM Context (same key as Brave, pre-extracted AI chunks)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchBraveLLM } = await import("./brave-llm.js");
 			const bc = (config.backends as Record<string, BackendConfig> | undefined)?.["brave-llm"];
 			const result = await searchBraveLLM(query, numResults, key!, signal, bc?.tokenBudget);
 			return { results: result.results };
@@ -228,6 +230,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Linkup",
 		setupLabel: "Linkup (EU/GDPR, AI-native, $20 free credit)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchLinkup } = await import("./linkup.js");
 			const bc = (config.backends as Record<string, BackendConfig> | undefined)?.linkup;
 			const result = await searchLinkup(query, numResults, key!, signal, bc?.depth);
 			return { results: result.results };
@@ -241,6 +244,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "You.com",
 		setupLabel: "You.com ($100 free credits, web+news)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchYoucom } = await import("./youcom.js");
 			const result = await searchYoucom(query, numResults, key!, signal);
 			return { results: result.results };
 		},
@@ -253,6 +257,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "fastCRW",
 		setupLabel: "fastCRW (500 free/mo, self-hostable)",
 		search: async (query, numResults, { key, signal }) => {
+			const { searchFastcrw } = await import("./fastcrw.js");
 			const bc = (config.backends as Record<string, BackendConfig> | undefined)?.fastcrw;
 			const result = await searchFastcrw(query, numResults, key!, signal, bc?.baseUrl);
 			return { results: result.results };
@@ -266,6 +271,7 @@ export const BACKEND_DEFS: Record<string, BackendRunner> = {
 		label: "Sofya",
 		setupLabel: "Sofya (search + fetch, full page content)",
 		search: async (query, numResults, { key, signal, backendConfig }) => {
+			const { searchSofya } = await import("./sofya.js");
 			const result = await searchSofya(query, numResults, key!, signal, {
 				searchDepth: backendConfig?.searchDepth,
 				topic: backendConfig?.topic,
